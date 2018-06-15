@@ -1,21 +1,22 @@
 #include <stdio.h>
-#include <sys/types.h>
-#include <pwd.h>
 #include <string.h>
-#include <linux/limits.h>
+#include <pwd.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <linux/limits.h>
 
-#ifndef USER_ID
-#define USER_ID 1000
-#endif
+/*
+	# gcc -o /bin/shell shell.c
+*/
 
 int get_default_shell(char *shell_path)
 {
 	struct passwd* entry;
+	uid_t uid =  getuid();
 
 	while( entry = getpwent() )
 	{
-		if( entry->pw_uid == USER_ID )
+		if( entry->pw_uid == uid )
 		{
 			strncpy(shell_path, entry->pw_shell, PATH_MAX);
 			endpwent();
